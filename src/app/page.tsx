@@ -5,6 +5,7 @@ import { useMemos } from '@/hooks/useMemos'
 import { Memo, MemoFormData } from '@/types/memo'
 import MemoList from '@/components/MemoList'
 import MemoForm from '@/components/MemoForm'
+import MemoViewerModal from '@/components/MemoViewerModal'
 
 export default function Home() {
   const {
@@ -22,6 +23,7 @@ export default function Home() {
 
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [editingMemo, setEditingMemo] = useState<Memo | null>(null)
+  const [selectedMemo, setSelectedMemo] = useState<Memo | null>(null)
 
   const handleCreateMemo = (formData: MemoFormData) => {
     createMemo(formData)
@@ -38,11 +40,35 @@ export default function Home() {
   const handleEditMemo = (memo: Memo) => {
     setEditingMemo(memo)
     setIsFormOpen(true)
+    setSelectedMemo(null) // 뷰어 모달 닫기
   }
 
   const handleCloseForm = () => {
     setIsFormOpen(false)
     setEditingMemo(null)
+  }
+
+  // 메모 선택 핸들러 (카드 클릭 시)
+  const handleMemoSelect = (memo: Memo) => {
+    setSelectedMemo(memo)
+  }
+
+  // 뷰어 모달 닫기
+  const handleCloseViewer = () => {
+    setSelectedMemo(null)
+  }
+
+  // 뷰어에서 편집 버튼 클릭
+  const handleEditFromViewer = (memo: Memo) => {
+    setSelectedMemo(null) // 뷰어 모달 닫기
+    setEditingMemo(memo)
+    setIsFormOpen(true)
+  }
+
+  // 뷰어에서 삭제 버튼 클릭
+  const handleDeleteFromViewer = (id: string) => {
+    deleteMemo(id)
+    setSelectedMemo(null) // 뷰어 모달 닫기
   }
 
   return (
@@ -93,9 +119,19 @@ export default function Home() {
           onCategoryChange={filterByCategory}
           onEditMemo={handleEditMemo}
           onDeleteMemo={deleteMemo}
+          onMemoSelect={handleMemoSelect}
           stats={stats}
         />
       </main>
+
+      {/* 메모 뷰어 모달 */}
+      <MemoViewerModal
+        isOpen={!!selectedMemo}
+        memo={selectedMemo}
+        onClose={handleCloseViewer}
+        onEdit={handleEditFromViewer}
+        onDelete={handleDeleteFromViewer}
+      />
 
       {/* 모달 폼 */}
       <MemoForm
