@@ -6,9 +6,10 @@ interface MemoItemProps {
   memo: Memo
   onEdit: (memo: Memo) => void
   onDelete: (id: string) => void
+  onSelect: (memo: Memo) => void
 }
 
-export default function MemoItem({ memo, onEdit, onDelete }: MemoItemProps) {
+export default function MemoItem({ memo, onEdit, onDelete, onSelect }: MemoItemProps) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
     return date.toLocaleDateString('ko-KR', {
@@ -31,8 +32,37 @@ export default function MemoItem({ memo, onEdit, onDelete }: MemoItemProps) {
     return colors[category as keyof typeof colors] || colors.other
   }
 
+  // 마크다운에서 순수 텍스트만 추출하는 함수
+  const getPlainTextFromMarkdown = (markdown: string, maxLength: number = 150) => {
+    // 마크다운 문법 제거
+    let text = markdown
+      .replace(/#{1,6}\s+/g, '') // 헤딩 제거
+      .replace(/\*\*(.*?)\*\*/g, '$1') // 굵은 글씨 제거
+      .replace(/\*(.*?)\*/g, '$1') // 기울임 제거
+      .replace(/`(.*?)`/g, '$1') // 인라인 코드 제거
+      .replace(/\[(.*?)\]\(.*?\)/g, '$1') // 링크 제거
+      .replace(/^[\s]*[-\*\+]\s+/gm, '') // 리스트 마커 제거
+      .replace(/^\d+\.\s+/gm, '') // 숫자 리스트 마커 제거
+      .replace(/^>\s+/gm, '') // 인용문 제거
+      .replace(/\n+/g, ' ') // 줄바꿈을 공백으로
+      .replace(/\s+/g, ' ') // 연속 공백 정리
+      .trim()
+
+    return text.length > maxLength ? text.substring(0, maxLength) + '...' : text
+  }
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    // 버튼 클릭이 아닌 경우에만 메모 선택
+    if (!(e.target as HTMLElement).closest('button')) {
+      onSelect(memo)
+    }
+  }
+
   return (
-    <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6 hover:shadow-lg transition-shadow duration-200">
+    <div 
+      className="bg-white rounded-lg shadow-md border border-gray-200 p-6 hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+      onClick={handleCardClick}
+    >
       {/* 헤더 */}
       <div className="flex justify-between items-start mb-3">
         <div className="flex-1">
@@ -55,7 +85,10 @@ export default function MemoItem({ memo, onEdit, onDelete }: MemoItemProps) {
         {/* 액션 버튼 */}
         <div className="flex gap-2 ml-4">
           <button
-            onClick={() => onEdit(memo)}
+            onClick={(e) => {
+              e.stopPropagation() // 이벤트 버블링 방지
+              onEdit(memo)
+            }}
             className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
             title="편집"
           >
@@ -74,7 +107,8 @@ export default function MemoItem({ memo, onEdit, onDelete }: MemoItemProps) {
             </svg>
           </button>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation() // 이벤트 버블링 방지
               if (window.confirm('정말로 이 메모를 삭제하시겠습니까?')) {
                 onDelete(memo.id)
               }
@@ -102,7 +136,7 @@ export default function MemoItem({ memo, onEdit, onDelete }: MemoItemProps) {
       {/* 내용 */}
       <div className="mb-4">
         <p className="text-gray-700 text-sm leading-relaxed line-clamp-3">
-          {memo.content}
+          {getPlainTextFromMarkdown(memo.content)}
         </p>
       </div>
 

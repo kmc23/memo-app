@@ -1,4 +1,6 @@
 @import 'tailwindcss';
+@import '@uiw/react-md-editor/markdown-editor.css';
+@import '@uiw/react-markdown-preview/markdown.css';
 
 :root {
   --background: #ffffff;
@@ -38,4 +40,202 @@ body {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* MDEditor Custom Styles */
+.w-md-editor {
+  background: white !important;
+}
+
+.w-md-editor-text-container, 
+.w-md-editor-text-input, 
+.w-md-editor-text-textarea {
+  font-family: 'Consolas', 'Malgun Gothic', 'Courier New', monospace !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
+  color: #374151 !important;
+  padding: 12px !important;
+  margin: 0 !important;
+  border: none !important;
+  outline: none !important;
+  resize: none !important;
+  box-sizing: border-box !important;
+}
+
+.w-md-editor-text {
+  font-family: 'Consolas', 'Malgun Gothic', 'Courier New', monospace !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
+  padding: 12px !important;
+  margin: 0 !important;
+}
+
+.w-md-editor-text-container {
+  position: relative !important;
+}
+
+.w-md-editor-text-container .w-md-editor-text,
+.w-md-editor-text-container .w-md-editor-text-input,
+.w-md-editor-text-container .w-md-editor-text-textarea {
+  font-family: 'Consolas', 'Malgun Gothic', 'Courier New', monospace !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
+  padding: 12px !important;
+  margin: 0 !important;
+  border: none !important;
+  outline: none !important;
+  resize: none !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.w-md-editor-text-container .w-md-editor-text-input:focus,
+.w-md-editor-text-container .w-md-editor-text-textarea:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.w-md-editor-preview {
+  background: white !important;
+  padding: 12px !important;
+}
+
+.w-md-editor-preview .wmde-markdown {
+  font-family: 'Segoe UI', 'Malgun Gothic', system-ui, -apple-system, sans-serif !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.w-md-editor-toolbar {
+  border-bottom: 1px solid #e5e7eb !important;
+  background: #f9fafb !important;
+}
+
+.w-md-editor-toolbar li button {
+  color: #374151 !important;
+}
+
+.w-md-editor-toolbar li button:hover {
+  background: #e5e7eb !important;
+}
+
+/* Markdown preview styles */
+.wmde-markdown {
+  background: transparent !important;
+  color: #374151 !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  font-family: 'Segoe UI', 'Malgun Gothic', system-ui, -apple-system, sans-serif !important;
+}
+
+/* Override Tailwind's list style reset for markdown content */
+.prose .wmde-markdown ul,
+.prose .wmde-markdown ol,
+.wmde-markdown ul,
+.wmde-markdown ol {
+  list-style: revert !important;
+  margin-left: 0 !important;
+  padding-left: 1.5em !important;
+}
+
+.prose .wmde-markdown ul li,
+.wmde-markdown ul li {
+  list-style-type: disc !important;
+  display: list-item !important;
+}
+
+.prose .wmde-markdown ol li,
+.wmde-markdown ol li {
+  list-style-type: decimal !important;
+  display: list-item !important;
+}
+
+.prose .wmde-markdown ul ul li,
+.wmde-markdown ul ul li {
+  list-style-type: circle !important;
+}
+
+.prose .wmde-markdown ul ul ul li,
+.wmde-markdown ul ul ul li {
+  list-style-type: square !important;
+}
+
+.wmde-markdown h1, 
+.wmde-markdown h2, 
+.wmde-markdown h3, 
+.wmde-markdown h4, 
+.wmde-markdown h5, 
+.wmde-markdown h6 {
+  color: #1f2937 !important;
+  margin-top: 1.5em !important;
+  margin-bottom: 0.5em !important;
+}
+
+.wmde-markdown h1 {
+  font-size: 1.875rem !important;
+  font-weight: 700 !important;
+}
+
+.wmde-markdown h2 {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+}
+
+.wmde-markdown h3 {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+}
+
+.wmde-markdown p {
+  margin-bottom: 1em !important;
+}
+
+.wmde-markdown ul, .wmde-markdown ol {
+  margin-bottom: 1em !important;
+  padding-left: 1.5em !important;
+  list-style: revert !important;
+}
+
+.wmde-markdown ul {
+  list-style-type: disc !important;
+}
+
+.wmde-markdown ol {
+  list-style-type: decimal !important;
+}
+
+.wmde-markdown li {
+  display: list-item !important;
+  margin-bottom: 0.25em !important;
+}
+
+.wmde-markdown blockquote {
+  border-left: 4px solid #e5e7eb !important;
+  padding-left: 1em !important;
+  margin: 1em 0 !important;
+  color: #6b7280 !important;
+}
+
+.wmde-markdown code {
+  background: #f3f4f6 !important;
+  padding: 0.125rem 0.25rem !important;
+  border-radius: 0.25rem !important;
+  font-size: 0.875em !important;
+  color: #1f2937 !important;
+}
+
+.wmde-markdown pre {
+  background: #f3f4f6 !important;
+  padding: 1rem !important;
+  border-radius: 0.5rem !important;
+  overflow-x: auto !important;
+  margin: 1em 0 !important;
+}
+
+.wmde-markdown pre code {
+  background: transparent !important;
+  padding: 0 !important;
 }

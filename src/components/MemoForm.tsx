@@ -1,12 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import {
   Memo,
   MemoFormData,
   MEMO_CATEGORIES,
   DEFAULT_CATEGORIES,
 } from '@/types/memo'
+
+// Dynamic import to avoid SSR issues
+const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
 
 interface MemoFormProps {
   isOpen: boolean
@@ -168,28 +172,41 @@ export default function MemoForm({
               </select>
             </div>
 
-            {/* 내용 */}
+            {/* 내용 - Markdown Editor */}
             <div>
               <label
                 htmlFor="content"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                내용 *
+                내용 * (마크다운 지원)
               </label>
-              <textarea
-                id="content"
-                value={formData.content}
-                onChange={e =>
-                  setFormData(prev => ({
-                    ...prev,
-                    content: e.target.value,
-                  }))
-                }
-                className="placeholder-gray-400 text-gray-400 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
-                placeholder="메모 내용을 입력하세요"
-                rows={8}
-                required
-              />
+              <div data-color-mode="light" className="border border-gray-300 rounded-lg overflow-hidden">
+                <MDEditor
+                  value={formData.content}
+                  onChange={(value) =>
+                    setFormData(prev => ({
+                      ...prev,
+                      content: value || '',
+                    }))
+                  }
+                  preview="edit"
+                  height={300}
+                  data-color-mode="light"
+                  textareaProps={{
+                    placeholder: '마크다운으로 메모를 작성하세요...\n\n예시:\n# 제목\n## 부제목\n- 리스트\n**굵게** *기울임*\n`코드`',
+                    style: {
+                      fontFamily: "'Consolas', 'Malgun Gothic', 'Courier New', monospace",
+                      fontSize: '14px',
+                      lineHeight: '20px',
+                      padding: '12px',
+                      margin: '0',
+                      border: 'none',
+                      outline: 'none',
+                      resize: 'none',
+                    },
+                  }}
+                />
+              </div>
             </div>
 
             {/* 태그 */}
